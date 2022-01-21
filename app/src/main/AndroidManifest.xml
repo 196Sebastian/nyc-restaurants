@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NYCRestaurants">
         <activity
+            android:name=".AddRestaurantActivity"
+            android:screenOrientation="portrait"
+            android:label="ADD NYC RESTAURANT"
+            android:theme="@style/CustomNoActionBarTheme"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
