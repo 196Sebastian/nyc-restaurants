@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
@@ -33,17 +36,42 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
 
     private var calendar = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
-
     private lateinit var galleryImageResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var resultLauncherCamera: ActivityResultLauncher<Intent>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_restaurant)
         setSupportActionBar(findViewById(R.id.toolbar_add_place))
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        galleryImageResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result ->
+            if(result.resultCode == Activity.RESULT_OK && result.data != null) {
+                val data: Intent? = result.data
+                val contentURI = data?.data
 
-        registerOnActivityForResult()
+                try{
+                    val selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
+                    findViewById<ImageView>(R.id.iv_place_image).setImageBitmap(selectedImageBitmap)
+                } catch (e: IOException){
+                    e.printStackTrace()
+                    Toast.makeText(this@AddRestaurantActivity, "Failed to load Image from GALLERY", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        resultLauncherCamera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // There are no request codes
+                val data: Intent? = result.data
+
+                val thumbNail : Bitmap = data!!.extras?.get("data") as Bitmap
+                findViewById<ImageView>(R.id.iv_place_image).setImageBitmap(thumbNail)
+            }
+        }
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         findViewById<Toolbar>(R.id.toolbar_add_place).setNavigationOnClickListener {
             onBackPressed()
@@ -78,7 +106,7 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
                         _, which ->
                     when(which){
                         0 -> choosePhotoFromGallery()
-                        1 -> Toast.makeText(this@AddRestaurantActivity, "Camera selection coming soon...", Toast.LENGTH_LONG).show()
+                        1 -> takePhotoFromCamera()
                     }
                 }
                 pictureDialog.show()
@@ -86,29 +114,28 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
-    private fun registerOnActivityForResult() {
-        galleryImageResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if(result.resultCode == Activity.RESULT_OK){
-                    val data: Intent? = result.data
-                    if(result.data != null){
-                        val contentURI = data?.data
-                        try {
-                            val selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
-                            findViewById<ImageView>(R.id.iv_place_image).setImageBitmap(selectedImageBitmap)
-                        }catch (e: IOException){
-                            e.printStackTrace()
-                            Toast.makeText(this@AddRestaurantActivity, "Failed to load Image from GALLERY", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+    private fun takePhotoFromCamera(){
+        Dexter.withContext(this).withPermissions(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+        ).withListener(object: MultiplePermissionsListener{
+            override fun onPermissionsChecked(report: MultiplePermissionsReport?){
+                if(report!!.areAllPermissionsGranted()){
+                    val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    resultLauncherCamera.launch(cameraIntent)
+                }
             }
-        }
+            override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken) {
+                showRationalDialogForPermissions()
+            }
+        }).onSameThread().check()
     }
 
     private fun choosePhotoFromGallery() {
         Dexter.withContext(this).withPermissions(
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         ).withListener(object: MultiplePermissionsListener{
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?){
                     if(report!!.areAllPermissionsGranted()){
