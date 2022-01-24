@@ -1,10 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id "org.jetbrains.kotlin.kapt"
 }
 
 android {
     compileSdk 31
+
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
 
     defaultConfig {
         applicationId "com.example.nycrestaurants"
@@ -46,4 +52,5 @@ dependencies {
     // Dexter Android Library
     implementation 'com.karumi:dexter:6.2.3'
 
+    kapt "com.android.databinding:compiler:7.0.4"
 }

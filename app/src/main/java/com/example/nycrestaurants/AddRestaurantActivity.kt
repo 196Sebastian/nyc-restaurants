@@ -1,6 +1,7 @@
 package com.example.nycrestaurants
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
@@ -8,17 +9,22 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,6 +34,8 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
     private var calendar = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
+    private lateinit var galleryImageResultLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_restaurant)
@@ -35,12 +43,14 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        registerOnActivityForResult()
+
         findViewById<Toolbar>(R.id.toolbar_add_place).setNavigationOnClickListener {
             onBackPressed()
         }
 
         dateSetListener = DatePickerDialog.OnDateSetListener {
-                view, year, month, dayOfMonth ->
+                _, year, month, dayOfMonth ->
             calendar.set(Calendar.YEAR, year)
             calendar.set(Calendar.MONTH, month)
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -76,13 +86,34 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
+    private fun registerOnActivityForResult() {
+        galleryImageResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if(result.resultCode == Activity.RESULT_OK){
+                    val data: Intent? = result.data
+                    if(result.data != null){
+                        val contentURI = data?.data
+                        try {
+                            val selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
+                            findViewById<ImageView>(R.id.iv_place_image).setImageBitmap(selectedImageBitmap)
+                        }catch (e: IOException){
+                            e.printStackTrace()
+                            Toast.makeText(this@AddRestaurantActivity, "Failed to load Image from GALLERY", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            }
+        }
+    }
+
     private fun choosePhotoFromGallery() {
-        Dexter.withContext(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            .withListener(object: MultiplePermissionsListener{
+        Dexter.withContext(this).withPermissions(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+        ).withListener(object: MultiplePermissionsListener{
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?){
                     if(report!!.areAllPermissionsGranted()){
-                        Toast.makeText(this@AddRestaurantActivity,
-                            "Storage READ/WRITE permission are granted. Now you can select an image from GALLERY", Toast.LENGTH_SHORT).show()
+                        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        galleryImageResultLauncher.launch(galleryIntent)
                     }
                 }
                 override fun onPermissionRationaleShouldBeShown(permissions: MutableList<PermissionRequest>?, token: PermissionToken) {
@@ -114,6 +145,9 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         val simpleDateFormat = SimpleDateFormat(myFormat, Locale.getDefault())
 
         findViewById<EditText>(R.id.et_date).setText(simpleDateFormat.format(calendar.time).toString())
+    }
 
+    companion object {
+        private const val GALLERY = 1
     }
 }
