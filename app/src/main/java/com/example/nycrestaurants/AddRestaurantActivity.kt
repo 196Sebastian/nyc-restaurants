@@ -3,12 +3,16 @@ package com.example.nycrestaurants
 import android.Manifest
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -19,6 +23,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -127,12 +135,32 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
-
     private fun updateDateInView(){
         val myFormat = "MM.dd.yyyy"
         val simpleDateFormat = SimpleDateFormat(myFormat, Locale.getDefault())
 
         findViewById<EditText>(R.id.et_date).setText(simpleDateFormat.format(calendar.time).toString())
+    }
+
+    private fun saveImageToInternalStorage(bitmap: Bitmap) {
+        val wrapper = ContextWrapper(applicationContext)
+        var file = wrapper.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE)
+
+        file = File(file, "${UUID.randomUUID()}.jpg")
+
+        try {
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
+
+        } catch (e: IOException){
+            e.printStackTrace()
+        }
+    }
+
+    companion object {
+        private const val IMAGE_DIRECTORY = "NYCRestaurantImages"
     }
 
 }
