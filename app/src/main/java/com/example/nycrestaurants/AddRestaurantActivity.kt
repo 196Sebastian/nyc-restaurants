@@ -1,35 +1,24 @@
 package com.example.nycrestaurants
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.Settings
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import org.w3c.dom.Text
-import java.io.IOException
+import androidx.core.content.ContextCompat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,8 +28,8 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
     private var calendar = Calendar.getInstance()
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
-    private val requestPermission: ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions())
-    { permissions ->
+
+    private val requestPermission: ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         run {
             permissions.entries.forEach {
                 val permissionName = it.key
@@ -70,14 +59,13 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
     }
 
 
-        private var openGalleryLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    private var openGalleryLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result ->
             if(result.resultCode == RESULT_OK && result.data != null){
-                val data: Intent? = result.data
-                val imageBackGround: Bitmap = data!!.extras?.get("data") as Bitmap
-                findViewById<ImageView>(R.id.iv_place_image).setImageBitmap(imageBackGround)
+                val currentImageView = findViewById<ImageView>(R.id.iv_place_image)
+                currentImageView.setImageURI(result.data?.data)
             }
-        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,10 +87,17 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         }
 
         findViewById<EditText>(R.id.et_date).setOnClickListener(this)
-        var tvImage: TextView = findViewById(R.id.tv_add_image)
+
+        val tvImage: TextView = findViewById(R.id.tv_add_image)
         tvImage.setOnClickListener {
             requestStoragePermission()
         }
+    }
+
+    private fun isReadStorageAllowed(): Boolean{
+        var result = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        return result == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestStoragePermission() {
@@ -120,7 +115,7 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             .setPositiveButton("Cancel") { dialog, _ -> dialog.dismiss() }
         builder.create().show()
     }
-    
+
     override fun onClick(v: View?) {
         when(v!!.id){
             R.id.et_date ->{
@@ -132,8 +127,8 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
-    private fun updateDateInView(){
 
+    private fun updateDateInView(){
         val myFormat = "MM.dd.yyyy"
         val simpleDateFormat = SimpleDateFormat(myFormat, Locale.getDefault())
 
