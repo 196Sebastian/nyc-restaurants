@@ -20,6 +20,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.nycrestaurants.R
+import com.example.nycrestaurants.database.DatabaseHandler
+import com.example.nycrestaurants.models.NYCRestaurantModel
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -31,7 +33,6 @@ import java.util.*
 class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
 
     private var calendar = Calendar.getInstance()
-    private var saveImageToInternalStorage: Uri? = null
     private var mLatitude: Double = 0.0
     private var mLongitude: Double = 0.0
 
@@ -50,8 +51,7 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
                         Toast.LENGTH_LONG
                     ).show()
 
-                    val pickIntent =
-                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     openGalleryLauncher.launch(pickIntent)
                 } else {
                     if (permissionName == Manifest.permission.READ_EXTERNAL_STORAGE) {
@@ -66,13 +66,11 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
-
-    private var openGalleryLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    private var openGalleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 result ->
             if(result.resultCode == RESULT_OK && result.data != null){
                 val currentImageView = findViewById<ImageView>(R.id.iv_place_image)
                 currentImageView.setImageURI(result.data?.data)
-                saveImageToInternalStorage
             }
     }
 
@@ -87,6 +85,7 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             onBackPressed()
         }
 
+        findViewById<EditText>(R.id.et_date).setOnClickListener(this)
         dateSetListener = DatePickerDialog.OnDateSetListener {
                 _, year, month, dayOfMonth ->
             calendar.set(Calendar.YEAR, year)
@@ -94,11 +93,10 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             updateDateInView()
         }
-
-        findViewById<EditText>(R.id.et_date).setOnClickListener(this)
+        updateDateInView()
 
         findViewById<Button>(R.id.btn_save).setOnClickListener{
-            // TODO SAVE THE DATAMODEL
+            savingRestaurant()
         }
 
         val tvImage: TextView = findViewById(R.id.tv_add_image)
@@ -137,6 +135,9 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH)).show()
             }
+            R.id.iv_place_image ->{
+                openGalleryLauncher
+            }
         }
     }
 
@@ -164,7 +165,49 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
+    private fun savingRestaurant(){
+
+        val etTitle: EditText = findViewById(R.id.et_title)
+        val etDescription: EditText = findViewById(R.id.et_description)
+        val etLocation: EditText = findViewById(R.id.et_location)
+        val etDate: EditText = findViewById(R.id.et_date)
+
+        when{
+            etTitle.text.isNullOrEmpty() -> {
+                Toast.makeText(this, "Please enter title", Toast.LENGTH_SHORT).show()
+            }
+            etDescription.text.isNullOrEmpty() -> {
+                Toast.makeText(this, "Please enter description", Toast.LENGTH_SHORT).show()
+            }
+            etLocation.text.isNullOrEmpty() -> {
+                Toast.makeText(this, "Please enter location", Toast.LENGTH_SHORT).show()
+            }
+            false ->{
+                Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
+            }else -> {
+            val nycRestaurantModel = NYCRestaurantModel(
+                0,
+                etTitle.text.toString(),
+                openGalleryLauncher.toString(),
+                etDescription.text.toString(),
+                etDate.text.toString(),
+                etLocation.text.toString(),
+                mLatitude,
+                mLongitude
+            )
+            val dbHandler = DatabaseHandler(this)
+            val addRestaurant = dbHandler.addNycRestaurant(nycRestaurantModel)
+
+            if (addRestaurant > 0) {
+                Toast.makeText(this, "The happy place details are inserted successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+          }
+        }
+    }
+
     companion object {
+        private const val GALLERY = 1
         private const val IMAGE_DIRECTORY = "NYCRestaurantImages"
     }
 }

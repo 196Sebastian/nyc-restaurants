@@ -29,7 +29,7 @@ class DatabaseHandler (context: Context): SQLiteOpenHelper(context, DATABASE_NAM
 
     override fun onCreate(db: SQLiteDatabase?) {
         // Creating table with fields
-        val CREATE_HAPPY_PLACE_TABLE = ("CREATE TABLE " + TABLE_NYC_RESTAURANT + " TEXT,"
+        val CREATE_NYC_RESTAURANT_TABLE = ("CREATE TABLE " + TABLE_NYC_RESTAURANT + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_TITLE + " TEXT,"
                 + KEY_IMAGE + " TEXT,"
@@ -38,7 +38,7 @@ class DatabaseHandler (context: Context): SQLiteOpenHelper(context, DATABASE_NAM
                 + KEY_LOCATION + " TEXT,"
                 + KEY_LATITUDE + " TEXT,"
                 + KEY_LONGITUDE + " TEXT)")
-        db?.execSQL(CREATE_HAPPY_PLACE_TABLE)
+        db?.execSQL(CREATE_NYC_RESTAURANT_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
