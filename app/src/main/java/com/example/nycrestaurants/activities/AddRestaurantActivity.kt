@@ -1,4 +1,4 @@
-package com.example.nycrestaurants
+package com.example.nycrestaurants.activities
 
 import android.Manifest
 import android.app.AlertDialog
@@ -12,17 +12,14 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.nycrestaurants.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -34,8 +31,11 @@ import java.util.*
 class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
 
     private var calendar = Calendar.getInstance()
-    private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
+    private var saveImageToInternalStorage: Uri? = null
+    private var mLatitude: Double = 0.0
+    private var mLongitude: Double = 0.0
 
+    private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
     private val requestPermission: ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         run {
@@ -72,6 +72,7 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             if(result.resultCode == RESULT_OK && result.data != null){
                 val currentImageView = findViewById<ImageView>(R.id.iv_place_image)
                 currentImageView.setImageURI(result.data?.data)
+                saveImageToInternalStorage
             }
     }
 
@@ -95,6 +96,10 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
         }
 
         findViewById<EditText>(R.id.et_date).setOnClickListener(this)
+
+        findViewById<Button>(R.id.btn_save).setOnClickListener{
+            // TODO SAVE THE DATAMODEL
+        }
 
         val tvImage: TextView = findViewById(R.id.tv_add_image)
         tvImage.setOnClickListener {
@@ -162,5 +167,4 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
     companion object {
         private const val IMAGE_DIRECTORY = "NYCRestaurantImages"
     }
-
 }

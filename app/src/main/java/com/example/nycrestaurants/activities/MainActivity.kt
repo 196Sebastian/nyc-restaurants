@@ -1,8 +1,9 @@
-package com.example.nycrestaurants
+package com.example.nycrestaurants.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.nycrestaurants.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
