@@ -9,6 +9,10 @@
     <color name="button_background_color">#FF03DAC5</color>
     <color name="white_color">#FFFFFFFF</color>
 
+    <color name="circular_image_border_color">#757575</color>
+    <color name="item_nyc_restaurant_description_text_color">#606060</color>
+
+
     <!-- Colors for Theme #28536B #C2948A #7EA8BE -->
 
 </resources>
