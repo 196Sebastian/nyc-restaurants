@@ -1,8 +1,11 @@
 package com.example.nycrestaurants.database
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.nycrestaurants.models.NYCRestaurantModel
 
@@ -62,6 +65,40 @@ class DatabaseHandler (context: Context): SQLiteOpenHelper(context, DATABASE_NAM
 
         db.close()
         return result
+    }
 
+   //@SuppressLint("Range")
+    fun getNYCRestaurantList(): ArrayList<NYCRestaurantModel>{
+
+        val nycRestaurantList = ArrayList<NYCRestaurantModel>()
+        val selectQuery = "SELECT * FROM $TABLE_NYC_RESTAURANT"
+        val db = this.readableDatabase
+
+        try{
+            val cursor: Cursor = db.rawQuery(selectQuery, null)
+
+            if(cursor.moveToFirst()){
+                do {
+                    val place = NYCRestaurantModel(
+                        cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_IMAGE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)),
+                        cursor.getString(cursor.getColumnIndex(KEY_DATE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_LOCATION)),
+                        cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE)),
+                        cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE)),
+                        )
+                    nycRestaurantList.add(place)
+
+                }while (cursor.moveToNext())
+            }
+            cursor.close()
+        }catch (e: SQLiteException){
+            db.execSQL(selectQuery)
+            return ArrayList()
+        }
+
+        return nycRestaurantList
     }
 }
