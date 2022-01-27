@@ -1,6 +1,7 @@
 package com.example.nycrestaurants.activities
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
@@ -199,7 +200,7 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             val addRestaurant = dbHandler.addNycRestaurant(nycRestaurantModel)
 
             if (addRestaurant > 0) {
-                Toast.makeText(this, "The happy place details are inserted successfully", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
                 finish()
             }
           }

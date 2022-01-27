@@ -1,5 +1,6 @@
 package com.example.nycrestaurants.activities
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<FloatingActionButton>(R.id.fab_add_restaurant).setOnClickListener {
             val intent = Intent(this, AddRestaurantActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, ADD_NYC_ACTIVITY_REQUEST_CODE)
         }
 
         getNYCRestaurantListFromLocalDB()
@@ -51,5 +52,21 @@ class MainActivity : AppCompatActivity() {
             findViewById<RecyclerView>(R.id.rv_nyc_restaurant_list).visibility = View.GONE
             findViewById<TextView>(R.id.tv_no_records_available).visibility = View.VISIBLE
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == ADD_NYC_ACTIVITY_REQUEST_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                getNYCRestaurantListFromLocalDB()
+            }else{
+                Log.e("Activity", "Cancelled or Back pressed")
+            }
+        }
+    }
+
+    companion object {
+        var ADD_NYC_ACTIVITY_REQUEST_CODE = 1
+
     }
 }
