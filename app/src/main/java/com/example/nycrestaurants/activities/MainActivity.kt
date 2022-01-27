@@ -37,6 +37,13 @@ class MainActivity : AppCompatActivity() {
         rvList.layoutManager = LinearLayoutManager(this)
         val restaurantAdapter = NYCRestaurantAdapter(this, nycRestaurantList)
         rvList.adapter = restaurantAdapter
+
+        restaurantAdapter.setOnClickListener(object : NYCRestaurantAdapter.OnClickListener{
+            override fun onClick(position: Int, model: NYCRestaurantModel) {
+                val intent = Intent(this@MainActivity, NYCRestaurantDetailActivity::class.java)
+                startActivity(intent)
+            }
+        })
     }
 
     private fun getNYCRestaurantListFromLocalDB(){
