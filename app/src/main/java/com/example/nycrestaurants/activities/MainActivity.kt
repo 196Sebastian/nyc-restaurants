@@ -14,6 +14,7 @@ import com.example.nycrestaurants.R
 import com.example.nycrestaurants.adapters.NYCRestaurantAdapter
 import com.example.nycrestaurants.database.DatabaseHandler
 import com.example.nycrestaurants.models.NYCRestaurantModel
+import com.example.nycrestaurants.utils.SwipeToDelete
 import com.example.nycrestaurants.utils.SwipeToEditCallback
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -59,6 +60,19 @@ class MainActivity : AppCompatActivity() {
 
         val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
         editItemTouchHelper.attachToRecyclerView(findViewById(R.id.rv_nyc_restaurant_list))
+
+        val deleteSwipeHandler = object : SwipeToDelete(this){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val rvAddList: RecyclerView = findViewById(R.id.rv_nyc_restaurant_list)
+                val adapter = rvAddList.adapter as NYCRestaurantAdapter
+                adapter.removeAt(viewHolder.adapterPosition)
+
+                getNYCRestaurantListFromLocalDB()
+            }
+        }
+
+        val deleteItemTouchHelper = ItemTouchHelper(deleteSwipeHandler)
+        deleteItemTouchHelper.attachToRecyclerView(findViewById(R.id.rv_nyc_restaurant_list))
     }
 
     private fun getNYCRestaurantListFromLocalDB(){

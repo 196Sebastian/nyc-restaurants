@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.nycrestaurants.R
 import com.example.nycrestaurants.activities.AddRestaurantActivity
 import com.example.nycrestaurants.activities.MainActivity
+import com.example.nycrestaurants.database.DatabaseHandler
 import com.example.nycrestaurants.models.NYCRestaurantModel
 
 open class NYCRestaurantAdapter (
@@ -44,6 +45,16 @@ open class NYCRestaurantAdapter (
                     onClickListener!!.onClick(position, model)
                 }
             }
+        }
+    }
+
+    fun removeAt(position: Int){
+        val dbHandler = DatabaseHandler(context)
+        val isDelete = dbHandler.deleteNYCRestaurant(list[position])
+
+        if(isDelete >0){
+            list.removeAt(position)
+            notifyItemRemoved(position)
         }
     }
 

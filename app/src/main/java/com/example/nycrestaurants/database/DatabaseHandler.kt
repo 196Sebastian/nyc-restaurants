@@ -85,6 +85,14 @@ class DatabaseHandler (context: Context): SQLiteOpenHelper(context, DATABASE_NAM
         return success
     }
 
+    fun deleteNYCRestaurant(nycRestaurant: NYCRestaurantModel): Int {
+        val db = this.writableDatabase
+        val success = db.delete(TABLE_NYC_RESTAURANT, KEY_ID + "=" + nycRestaurant.id, null)
+        db.close()
+
+        return success
+    }
+
    //@SuppressLint("Range")
     fun getNYCRestaurantList(): ArrayList<NYCRestaurantModel>{
 
