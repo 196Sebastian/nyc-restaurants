@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nycrestaurants.R
 import com.example.nycrestaurants.adapters.NYCRestaurantAdapter
 import com.example.nycrestaurants.database.DatabaseHandler
 import com.example.nycrestaurants.models.NYCRestaurantModel
+import com.example.nycrestaurants.utils.SwipeToEditCallback
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +47,18 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         })
+
+        val editSwipeHandler = object : SwipeToEditCallback(this){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val rvAddList: RecyclerView = findViewById(R.id.rv_nyc_restaurant_list)
+                val adapter = rvAddList.adapter as NYCRestaurantAdapter
+                adapter.notifyEditItem(this@MainActivity, viewHolder.adapterPosition, ADD_NYC_ACTIVITY_REQUEST_CODE)
+
+            }
+        }
+
+        val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
+        editItemTouchHelper.attachToRecyclerView(findViewById(R.id.rv_nyc_restaurant_list))
     }
 
     private fun getNYCRestaurantListFromLocalDB(){

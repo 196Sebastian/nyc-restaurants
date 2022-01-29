@@ -1,6 +1,8 @@
 package com.example.nycrestaurants.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nycrestaurants.R
+import com.example.nycrestaurants.activities.AddRestaurantActivity
+import com.example.nycrestaurants.activities.MainActivity
 import com.example.nycrestaurants.models.NYCRestaurantModel
 
 open class NYCRestaurantAdapter (
@@ -41,6 +45,13 @@ open class NYCRestaurantAdapter (
                 }
             }
         }
+    }
+
+    fun notifyEditItem(activity: Activity, position: Int, requestCode: Int){
+        val intent = Intent(context, AddRestaurantActivity::class.java)
+        intent.putExtra(MainActivity.EXTRA_PLACE_DETAILS, list[position])
+        activity.startActivityForResult(intent, requestCode)
+        notifyItemChanged(position)
     }
 
     override fun getItemCount(): Int {

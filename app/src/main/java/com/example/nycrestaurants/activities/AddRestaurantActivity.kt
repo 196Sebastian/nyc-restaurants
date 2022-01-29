@@ -37,6 +37,8 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
     private var mLatitude: Double = 0.0
     private var mLongitude: Double = 0.0
 
+    private var mNYCRestaurantDetails : NYCRestaurantModel? = null
+
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
 
     private val requestPermission: ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -86,6 +88,10 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             onBackPressed()
         }
 
+        if(intent.hasExtra(MainActivity.EXTRA_PLACE_DETAILS)){
+            mNYCRestaurantDetails = intent.getSerializableExtra(MainActivity.EXTRA_PLACE_DETAILS) as NYCRestaurantModel
+        }
+
         findViewById<EditText>(R.id.et_date).setOnClickListener(this)
         dateSetListener = DatePickerDialog.OnDateSetListener {
                 _, year, month, dayOfMonth ->
@@ -95,6 +101,18 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             updateDateInView()
         }
         updateDateInView()
+
+        if(mNYCRestaurantDetails != null){
+            supportActionBar?.title = "Edit NYC Restaurant"
+            findViewById<EditText>(R.id.et_title).setText(mNYCRestaurantDetails!!.title)
+            findViewById<EditText>(R.id.et_description).setText(mNYCRestaurantDetails!!.description)
+            findViewById<EditText>(R.id.et_date).setText(mNYCRestaurantDetails!!.date)
+            findViewById<EditText>(R.id.et_location).setText(mNYCRestaurantDetails!!.location)
+            mLatitude = mNYCRestaurantDetails!!.latitude
+            mLongitude = mNYCRestaurantDetails!!.longitude
+
+            findViewById<Button>(R.id.btn_save).text = "UPDATE"
+        }
 
         findViewById<Button>(R.id.btn_save).setOnClickListener{
             savingRestaurant()
