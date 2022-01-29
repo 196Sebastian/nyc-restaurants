@@ -114,9 +114,7 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             findViewById<Button>(R.id.btn_save).text = "UPDATE"
         }
 
-        findViewById<Button>(R.id.btn_save).setOnClickListener{
-            savingRestaurant()
-        }
+        findViewById<Button>(R.id.btn_save).setOnClickListener(this)
 
         val tvImage: TextView = findViewById(R.id.tv_add_image)
         tvImage.setOnClickListener {
@@ -156,6 +154,9 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
             }
             R.id.iv_place_image ->{
                 openGalleryLauncher
+            }
+            R.id.btn_save -> {
+                savingRestaurant()
             }
         }
     }
@@ -205,7 +206,7 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
                 Toast.makeText(this, "Please select an image", Toast.LENGTH_SHORT).show()
             }else -> {
             val nycRestaurantModel = NYCRestaurantModel(
-                0,
+                if(mNYCRestaurantDetails == null) 0 else mNYCRestaurantDetails!!.id,
                 etTitle.text.toString(),
                 openGalleryLauncher.toString(),
                 etDescription.text.toString(),
@@ -215,11 +216,22 @@ class AddRestaurantActivity : AppCompatActivity(), View.OnClickListener{
                 mLongitude
             )
             val dbHandler = DatabaseHandler(this)
-            val addRestaurant = dbHandler.addNycRestaurant(nycRestaurantModel)
 
-            if (addRestaurant > 0) {
-                setResult(Activity.RESULT_OK)
-                finish()
+            if(mNYCRestaurantDetails == null){
+                val addRestaurant = dbHandler.addNycRestaurant(nycRestaurantModel)
+
+                if (addRestaurant > 0) {
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+            } else {
+
+                val updateNYCRestaurant = dbHandler.updateNycRestaurant(nycRestaurantModel)
+
+                if(updateNYCRestaurant > 0){
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
             }
           }
         }

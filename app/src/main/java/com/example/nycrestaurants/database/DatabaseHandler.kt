@@ -67,6 +67,24 @@ class DatabaseHandler (context: Context): SQLiteOpenHelper(context, DATABASE_NAM
         return result
     }
 
+    fun updateNycRestaurant(nycRestaurant: NYCRestaurantModel): Int {
+        val db = this.writableDatabase
+
+        val contentValues = ContentValues()
+        contentValues.put(KEY_TITLE, nycRestaurant.title)
+        contentValues.put(KEY_IMAGE, nycRestaurant.image)
+        contentValues.put(KEY_DESCRIPTION, nycRestaurant.description)
+        contentValues.put(KEY_DATE, nycRestaurant.date)
+        contentValues.put(KEY_LOCATION, nycRestaurant.location)
+        contentValues.put(KEY_LATITUDE, nycRestaurant.latitude)
+        contentValues.put(KEY_LONGITUDE, nycRestaurant.longitude)
+
+        val success = db.update(TABLE_NYC_RESTAURANT, contentValues, KEY_ID + "=" +nycRestaurant.id, null)
+
+        db.close()
+        return success
+    }
+
    //@SuppressLint("Range")
     fun getNYCRestaurantList(): ArrayList<NYCRestaurantModel>{
 
