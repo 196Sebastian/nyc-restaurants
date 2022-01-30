@@ -1,8 +1,10 @@
 package com.example.nycrestaurants.activities
 
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toolbar
@@ -33,6 +35,12 @@ class NYCRestaurantDetailActivity : AppCompatActivity() {
             findViewById<ImageView>(R.id.iv_place_image).setImageURI(Uri.parse(nycRestaurantDetailModel.image))
             findViewById<TextView>(R.id.tv_description).text = nycRestaurantDetailModel.description
             findViewById<TextView>(R.id.tv_location).text = nycRestaurantDetailModel.location
+
+            findViewById<Button>(R.id.btn_view_on_map).setOnClickListener {
+                val intent = Intent(this, MapActivity::class.java)
+                intent.putExtra(MainActivity.EXTRA_PLACE_DETAILS, nycRestaurantDetailModel)
+                startActivity(intent)
+            }
         }
     }
 }
