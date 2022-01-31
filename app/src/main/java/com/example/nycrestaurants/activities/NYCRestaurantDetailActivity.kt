@@ -12,6 +12,8 @@ import com.example.nycrestaurants.R
 import com.example.nycrestaurants.models.NYCRestaurantModel
 
 class NYCRestaurantDetailActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nycrestaurant_detail)
@@ -38,6 +40,15 @@ class NYCRestaurantDetailActivity : AppCompatActivity() {
             findViewById<Button>(R.id.btn_view_on_map).setOnClickListener {
                 val intent = Intent(this, MapActivity::class.java)
                 intent.putExtra(MainActivity.EXTRA_PLACE_DETAILS, nycRestaurantDetailModel)
+                startActivity(intent)
+            }
+
+            findViewById<Button>(R.id.btn_share_location).setOnClickListener {
+                val uri = "Check Out This NYC Restaurant!: http://maps.google.com/maps?saddr= ${nycRestaurantDetailModel.latitude} ${nycRestaurantDetailModel.longitude}"
+                var intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(Intent.EXTRA_TEXT, uri)
+                intent.type = "text/plain"
+                intent = Intent.createChooser(intent, "Share Via:")
                 startActivity(intent)
             }
         }
