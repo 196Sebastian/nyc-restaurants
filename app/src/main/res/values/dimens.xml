@@ -23,7 +23,7 @@
     <dimen name="item_nyc_restaurant_cv_corner_radius">3dp</dimen>
     <dimen name="item_nyc_restaurant_cv_elevation">3dp</dimen>
     <dimen name="item_nyc_restaurant_content_padding">5dp</dimen>
-    <dimen name="item_nyc_restaurant_circular_image_size">70dp</dimen>
+    <dimen name="item_nyc_restaurant_circular_image_size">78dp</dimen>
     <dimen name="item_nyc_restaurant_ll_marginStart">10dp</dimen>
     <dimen name="item_nyc_restaurant_ll_marginEnd">2dp</dimen>
     <dimen name="item_nyc_restaurant_title_textSize">16sp</dimen>
@@ -31,17 +31,16 @@
 
     <dimen name="detail_screen_image_height_size">250dp</dimen>
     <dimen name="detail_screen_description_margin">8dp</dimen>
-    <dimen name="detail_screen_description_text_size">16sp</dimen>
+    <dimen name="detail_screen_description_text_size">30sp</dimen>
     <dimen name="detail_screen_location_marginStartEnd">8dp</dimen>
     <dimen name="detail_screen_location_marginTop">16dp</dimen>
-    <dimen name="detail_screen_location_text_size">18sp</dimen>
+    <dimen name="detail_screen_location_text_size">16sp</dimen>
 
     <dimen name="detail_screen_btn_view_on_map_marginStartEnd">8dp</dimen>
-    <dimen name="detail_screen_btn_view_on_map_marginTop">16dp</dimen>
+    <dimen name="detail_screen_btn_view_on_map_marginTop">19dp</dimen>
     <dimen name="detail_screen_btn_view_on_map_paddingTopBottom">8dp</dimen>
     <dimen name="detail_screen_btn_view_on_map_text_size">18sp</dimen>
-
-
+    <dimen name="detail_screen_description_marginEnd">8dp</dimen>
 
 
 </resources>

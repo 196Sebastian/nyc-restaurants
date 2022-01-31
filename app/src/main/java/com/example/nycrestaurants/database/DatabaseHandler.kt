@@ -54,7 +54,6 @@ class DatabaseHandler (context: Context): SQLiteOpenHelper(context, DATABASE_NAM
 
         val contentValues = ContentValues()
         contentValues.put(KEY_TITLE, nycRestaurant.title)
-        contentValues.put(KEY_IMAGE, nycRestaurant.image)
         contentValues.put(KEY_DESCRIPTION, nycRestaurant.description)
         contentValues.put(KEY_DATE, nycRestaurant.date)
         contentValues.put(KEY_LOCATION, nycRestaurant.location)
@@ -72,7 +71,6 @@ class DatabaseHandler (context: Context): SQLiteOpenHelper(context, DATABASE_NAM
 
         val contentValues = ContentValues()
         contentValues.put(KEY_TITLE, nycRestaurant.title)
-        contentValues.put(KEY_IMAGE, nycRestaurant.image)
         contentValues.put(KEY_DESCRIPTION, nycRestaurant.description)
         contentValues.put(KEY_DATE, nycRestaurant.date)
         contentValues.put(KEY_LOCATION, nycRestaurant.location)
@@ -108,7 +106,6 @@ class DatabaseHandler (context: Context): SQLiteOpenHelper(context, DATABASE_NAM
                     val place = NYCRestaurantModel(
                         cursor.getInt(cursor.getColumnIndex(KEY_ID)),
                         cursor.getString(cursor.getColumnIndex(KEY_TITLE)),
-                        cursor.getString(cursor.getColumnIndex(KEY_IMAGE)),
                         cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)),
                         cursor.getString(cursor.getColumnIndex(KEY_DATE)),
                         cursor.getString(cursor.getColumnIndex(KEY_LOCATION)),

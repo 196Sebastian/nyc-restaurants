@@ -31,7 +31,7 @@
                 android:layout_width="@dimen/item_nyc_restaurant_circular_image_size"
                 android:layout_height="@dimen/item_nyc_restaurant_circular_image_size"
                 android:contentDescription="@string/image_content_description"
-                android:src="@mipmap/ic_launcher_round"
+                android:src="@drawable/food_icon"
                 app:civ_border_color="@color/circular_image_border_color" />
 
             <LinearLayout

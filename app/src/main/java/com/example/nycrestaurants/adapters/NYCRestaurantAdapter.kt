@@ -36,7 +36,6 @@ open class NYCRestaurantAdapter (
         val model = list[position]
 
         if(holder is MyViewHolder){
-            holder.itemView.findViewById<ImageView>(R.id.iv_place_image).setImageURI(Uri.parse(model.image))
             holder.itemView.findViewById<TextView>(R.id.tvTitle).text = model.title
             holder.itemView.findViewById<TextView>(R.id.tvDescription).text = model.description
 

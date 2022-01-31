@@ -32,7 +32,6 @@ class NYCRestaurantDetailActivity : AppCompatActivity() {
                 onBackPressed()
             }
 
-            findViewById<ImageView>(R.id.iv_place_image).setImageURI(Uri.parse(nycRestaurantDetailModel.image))
             findViewById<TextView>(R.id.tv_description).text = nycRestaurantDetailModel.description
             findViewById<TextView>(R.id.tv_location).text = nycRestaurantDetailModel.location
 
