@@ -42,7 +42,7 @@ class NYCRestaurantDetailActivity : AppCompatActivity() {
                 intent.putExtra(MainActivity.EXTRA_PLACE_DETAILS, nycRestaurantDetailModel)
                 startActivity(intent)
             }
-
+            
             findViewById<Button>(R.id.btn_share_location).setOnClickListener {
                 val uri = "Check Out This NYC Restaurant!: http://maps.google.com/maps?saddr= ${nycRestaurantDetailModel.latitude} ${nycRestaurantDetailModel.longitude}"
                 var intent = Intent(Intent.ACTION_SEND)
