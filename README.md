@@ -10,8 +10,8 @@ using Google Map API and the ability to share your favorite restaurants with oth
 <img src="https://user-images.githubusercontent.com/87108242/153086504-0c1ae538-ddc9-4cb4-a336-d1346391180d.png" width="850" height="600">
 
 # 👨‍💻 The Building Process
-- info
-- info
+- Used external dimensions to keep the project maintainable.
+- Application uses a calendar picker using DatePickerDialog.OnDateSetListener() which provides a widget for selecting a date.
 - info
 
 <img src="https://user-images.githubusercontent.com/87108242/153088555-2be6970f-f005-4ccc-b392-ae569d058a3a.png" width="850" height="600">
