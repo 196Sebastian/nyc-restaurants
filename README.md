@@ -14,5 +14,10 @@ using Google Map API and the ability to share your favorite restaurants with oth
 - Application uses a calendar picker using DatePickerDialog.OnDateSetListener() which provides a widget for selecting a date.
 - Kept the project clean by creating different directories for our activities, models and databases.
 - Before a user can save a restaurant of their choosing information has to be added first which is then saved via SQLite to our local database.
+- Used a third party library for our nice rounded images.
+- In order to keep the list updating dynamically I added ActivityForResult.
+- Sharing your favorite restaurant with friends via email or social networking using the Android sharesheet. 
+- The swipe to edit functionality is using itemTouchHelper as well as the delete functionality.
+- Application uses Google Places API.
 
 <img src="https://user-images.githubusercontent.com/87108242/153088555-2be6970f-f005-4ccc-b392-ae569d058a3a.png" width="850" height="600">
