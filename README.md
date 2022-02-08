@@ -12,6 +12,7 @@ using Google Map API and the ability to share your favorite restaurants with oth
 # 👨‍💻 The Building Process
 - Used external dimensions to keep the project maintainable.
 - Application uses a calendar picker using DatePickerDialog.OnDateSetListener() which provides a widget for selecting a date.
-- info
+- Kept the project clean by creating different directories for our activities, models and databases.
+- Before a user can save a restaurant of their choosing information has to be added first which is then saved via SQLite to our local database.
 
 <img src="https://user-images.githubusercontent.com/87108242/153088555-2be6970f-f005-4ccc-b392-ae569d058a3a.png" width="850" height="600">
