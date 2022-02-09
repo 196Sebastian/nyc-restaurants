@@ -21,3 +21,7 @@ using Google Map API and the ability to share your favorite restaurants with oth
 - Application uses Google Places API.
 
 <img src="https://user-images.githubusercontent.com/87108242/153088555-2be6970f-f005-4ccc-b392-ae569d058a3a.png" width="850" height="600">
+
+# 🔔 Contact Me!
+
+  [📝 Portfolio](https://sebastiancorrea.netlify.app/) • [💼 Linkedin](https://www.linkedin.com/in/sebastian-correa-b6858b177/) • [🐤 Twitter](https://twitter.com/196Sebastian)
