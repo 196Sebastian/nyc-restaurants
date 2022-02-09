@@ -24,4 +24,4 @@ using Google Map API and the ability to share your favorite restaurants with oth
 
 # 🔔 Contact Me!
 
-  [📝 Portfolio](https://sebastiancorrea.netlify.app/) • [💼 Linkedin](https://www.linkedin.com/in/sebastian-correa-b6858b177/) • [🐤 Twitter](https://twitter.com/196Sebastian)
+  [📝 Portfolio](https://sebastiancorrea.netlify.app/) • [💼 Linkedin](https://www.linkedin.com/in/sebastian-correa-b6858b177/) • [🐤 Twitter](https://twitter.com/196Sebastian) • [📱 Check Out Another Project!](https://github.com/196Sebastian/to-do-app)
